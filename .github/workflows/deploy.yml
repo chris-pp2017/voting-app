@@ -3,12 +3,12 @@ name: Deploy Docker Compose
 on:
   push:
     branches:
-      - main  # Adjust to your deployment branch
+      - main  # Adjust to your target branch
 
 jobs:
   deploy:
-    name: Deploy on Self-hosted Runner (s5)
-    runs-on: [self-hosted, s10]
+    name: Deploy on Self-hosted Runner (s5 with label s10)
+    runs-on: [self-hosted, s10]  # s10 is the label assigned to runner s5
 
     steps:
       - name: Checkout code
@@ -44,11 +44,11 @@ jobs:
             echo "Docker Compose already installed"
           fi
 
-      - name: Bring down existing containers
+      - name: Stop existing containers (optional)
         run: |
-          docker compose -f docker-compose.yml down || true
+          sudo docker compose -f compose.yml down || true
 
       - name: Deploy with Docker Compose
         run: |
-          docker compose -f compose.yml up -d
+          sudo docker compose -f compose.yml up -d
 
